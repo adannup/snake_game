@@ -25,7 +25,7 @@ impl Direction {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Block {
     x: i32,
     y: i32,
@@ -93,6 +93,11 @@ impl Snake {
 
     pub fn head_direction(&self) -> Direction {
         self.direction
+    }
+
+    pub fn restore_tail(&mut self) {
+        let blk = self.tail.clone().unwrap();
+        self.body.push_back(blk);
     }
     pub fn overlap_tail(&self, x: i32, y: i32) -> bool {
         let mut ch = 0;

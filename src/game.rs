@@ -51,6 +51,14 @@ impl Game {
         draw_rectangle(BORDER_COLOR, self.width - 1, 0, 1, self.height, con, g);
     }
 
+    fn check_eating(&mut self) {
+        let (head_x, head_y): (i32, i32) = self.snake.head_position();
+        if self.food_exists && self.food_x == head_x && self.food_y == head_y {
+            self.food_exists = false;
+            self.snake.restore_tail();
+        }
+    }
+
     pub fn key_pressed(&mut self, key: Key) {
         let dir = match key {
             Key::Up => Some(Direction::Up),
@@ -80,6 +88,7 @@ impl Game {
 
     fn update_snake(&mut self, dir: Option<Direction>) {
         self.snake.move_forward(dir);
+        self.check_eating();
         self.waiting_time = 0.0;
     }
 

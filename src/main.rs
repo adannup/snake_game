@@ -19,12 +19,16 @@ fn main() {
         .exit_on_esc(true)
         .build()
         .unwrap();
-    let game = Game::new(width, height);
+    let mut game = Game::new(width, height);
 
     while let Some(event) = window.next() {
         window.draw_2d(&event, |context, graphics, _device| {
             clear(BACK_COLOR, graphics);
             game.draw(&context, graphics);
+
+            event.update(|arg| {
+                game.update(arg.dt);
+            });
         });
     }
 }

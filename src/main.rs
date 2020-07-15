@@ -25,10 +25,10 @@ fn main() {
         window.draw_2d(&event, |context, graphics, _device| {
             clear(BACK_COLOR, graphics);
             game.draw(&context, graphics);
+        });
 
-            event.update(|arg| {
-                game.update(arg.dt);
-            });
+        event.update(|arg| {
+            game.update(arg.dt);
         });
     }
 }

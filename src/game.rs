@@ -4,13 +4,15 @@ use piston_window::*;
 use rand::{thread_rng, Rng};
 
 use crate::draw::{draw_block, draw_rectangle};
-use crate::snake::Snake;
+use crate::snake::{Direction, Snake};
 
 /*
 ** Constanst
 **/
 const BORDER_COLOR: Color = [0.5, 0.5, 0.5, 1.0];
 const FOOD_COLOR: Color = [0.80, 0.00, 0.00, 1.0];
+
+const MOVING_PERIOD: f64 = 0.1;
 
 pub struct Game {
     snake: Snake,
@@ -20,12 +22,15 @@ pub struct Game {
     food_exists: bool,
     food_x: i32,
     food_y: i32,
+
+    waiting_time: f64,
 }
 
 impl Game {
     pub fn new(width: i32, height: i32) -> Game {
         Game {
             snake: Snake::new(2, 2),
+            waiting_time: 0.0,
             width,
             height,
             food_exists: true,
@@ -47,9 +52,19 @@ impl Game {
     }
 
     pub fn update(&mut self, delta_time: f64) {
+        self.waiting_time += delta_time;
         if !self.food_exists {
             self.add_food();
         }
+
+        if self.waiting_time > MOVING_PERIOD {
+            self.update_snake(None);
+        }
+    }
+
+    fn update_snake(&mut self, dir: Option<Direction>) {
+        self.snake.move_forward(dir);
+        self.waiting_time = 0.0;
     }
 
     fn add_food(&mut self) {

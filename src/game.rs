@@ -14,6 +14,7 @@ const FOOD_COLOR: Color = [0.80, 0.00, 0.00, 1.0];
 const GAMEOVER_COLOR: Color = [0.90, 0.00, 0.00, 0.5];
 
 const MOVING_PERIOD: f64 = 0.1;
+const RESTART_TIME: f64 = 1.0;
 
 pub struct Game {
     snake: Snake,
@@ -87,6 +88,12 @@ impl Game {
 
     pub fn update(&mut self, delta_time: f64) {
         self.waiting_time += delta_time;
+        if self.game_over {
+            if self.waiting_time > RESTART_TIME {
+                self.restart();
+            }
+            return;
+        }
         if !self.food_exists {
             self.add_food();
         }
@@ -129,5 +136,14 @@ impl Game {
         self.food_x = new_x;
         self.food_y = new_y;
         self.food_exists = true;
+    }
+
+    fn restart(&mut self) {
+        self.snake = Snake::new(2, 2);
+        self.waiting_time = 0.0;
+        self.food_exists = true;
+        self.food_x = 6;
+        self.food_y = 4;
+        self.game_over = false;
     }
 }

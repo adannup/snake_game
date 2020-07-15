@@ -51,6 +51,22 @@ impl Game {
         draw_rectangle(BORDER_COLOR, self.width - 1, 0, 1, self.height, con, g);
     }
 
+    pub fn key_pressed(&mut self, key: Key) {
+        let dir = match key {
+            Key::Up => Some(Direction::Up),
+            Key::Down => Some(Direction::Down),
+            Key::Left => Some(Direction::Left),
+            Key::Right => Some(Direction::Right),
+            _ => Some(self.snake.head_direction()),
+        };
+
+        if dir.unwrap() == self.snake.head_direction().opposite() {
+            return;
+        }
+
+        self.update_snake(dir);
+    }
+
     pub fn update(&mut self, delta_time: f64) {
         self.waiting_time += delta_time;
         if !self.food_exists {
